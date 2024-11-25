@@ -54,58 +54,118 @@ public class Algebra {
 	public static int times(int x1, int x2) {
 		int sum = x1;
 		if (x1 > 0) {
-			for (int i = 1; i < x2; i++) {
-				sum = plus(sum , x1);
+			if (x2 > 0) {
+				for (int i = 1; i < x2; i++) {
+					sum = plus(sum , x1);
+				}
 			}
 			if (x2 < 0) {
-				for (int i = -1; i != x2; i--) {
+				for (int i = 1; i > x2; i--) {
 					sum = minus(sum , x1);
 				}
 			}
 		} else if (x1 < 0) {
-			for (int i = 1; i < x2; i++) {
-				sum = plus(sum , x1);
+			if (x2 > 0) {
+				for (int i = 1; i < x2; i++) {
+					sum = plus(sum , x1);
+				}
 			}
 			if (x2 < 0) {
-				for (int i = -1; i != x2; i--) {
+				for (int i = 1; i > x2; i--) {
 					sum = minus(sum , x1);
 				}
 		}
-		if (x2 == 0 || x1 == 0) {
-			return 0;
 		}
+		if (x2 == 0 || x1 == 0) {
+			sum = 0;
 		}
 		return sum;
 	}
 
 	// Returns x^n (for n >= 0)
 	public static int pow(int x, int n) {
+		int pow = x;
 		if (n == 0) {
 			return 1;
-		} else {
-			int pow = x;
+		}
+		if (x < 0) {
 			for (int i = 1; i < n; i++){
 				pow = times(pow , x);
 			}
-			return pow;
+		} else {
+			for (int i = 1; i < n; i++){
+				pow = times(pow , x);
+			}
 		}
+
+		return pow;
 		
 	}
 
 	// Returns the integer part of x1 / x2 
 	public static int div(int x1, int x2) {
 		int i = 0;
-		while (x1 > 0) {
-			if (minus(x1 , x2) >= x2) {
-				x1 = minus(x1 , x2);
-				i++;
-			}else if ( minus(x1 , x2) < x2 && minus(x1 , x2) >= 0) {
-				i++;
-				x1 = minus(x1 , x2);
-			} else {
-				x1 = minus(x1 , x2);
+		if (x1 == 0) {
+			i = 0;
+		}
+		if (x1 > 0) {
+			if (x2 > 0){
+				while (x1 > 0) {
+					if (minus(x1 , x2) >= x2) {
+						x1 = minus(x1 , x2);
+						i++;
+					}else if ( minus(x1 , x2) < x2 && minus(x1 , x2) >= 0) {
+						i++;
+						x1 = minus(x1 , x2);
+					} else {
+						x1 = minus(x1 , x2);
+					}
+				}
 			}
-			
+			if (x2 < 0){
+				while (x1 > 0) {
+					if (minus(x1 , x2) >= x2) {
+						x1 = minus(x1 , x2);
+						i++;
+					}else if ( minus(x1 , x2) < x2 && minus(x1 , x2) >= 0) {
+						i++;
+						x1 = minus(x1 , x2);
+					} else {
+						x1 = minus(x1 , x2);
+					}
+				i = times (i , -1);
+				}
+				
+			}
+		} else if (x1 < 0) {
+			if (x2 > 0){
+				x1 = times(x1 , -1);
+				while (x1 > 0) {
+					if (minus(x1 , x2) >= x2) {
+						x1 = minus(x1 , x2);
+						i++;
+					}else if ( minus(x1 , x2) < x2 && minus(x1 , x2) >= 0) {
+						i++;
+						x1 = minus(x1 , x2);
+					} else {
+						x1 = minus(x1 , x2);
+					}
+				}
+				i = times(i , -1);
+			}
+			if (x2 < 0){
+				while (x1 < 0) {
+					if (minus(x1 , x2) <= x2) {
+						x1 = minus(x1 , x2);
+						i++;
+					}else if ( minus(x1 , x2) > x2 && minus(x1 , x2) <= 0) {
+						i++;
+						x1 = minus(x1 , x2);
+					} else {
+						x1 = minus(x1 , x2);
+					}
+				} 
+			}
 		}
 		return i;
 	}
@@ -129,16 +189,14 @@ public class Algebra {
 
 	// Returns the integer part of sqrt(x) 
 	public static int sqrt(int x) {
-		double epsilon = 0.01, L = 1.0, H = x;
-		double g = (div(plus((int) L, (int)H),2));
-		while (minus(times((int)g, (int)g), x) >= epsilon && times(minus(times((int)g, (int)g), x) , -1) >= epsilon) {
-			if (times((int)g, (int)g) < x) {
-				L = g;
-			} else {
-				H = g;
+		int num = 1;
+		if (x == 0) return 0;
+		while (times(num , num) < x){
+			num++;
+			if (times(num , num) > x) {
+				return minus(num , 1);
 			}
-			g = (div(plus((int) L, (int)H),2));
 		}
-		return (int)g + 1; //// returnes wrong number for big x.
+		return num; 
 	}	  	  
 }
